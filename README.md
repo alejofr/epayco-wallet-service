@@ -13,8 +13,8 @@ A NestJS-based digital wallet service.
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
-   cd digital-wallet-service
+   git clone <https://github.com/alejofr/epayco-wallet-service.git>
+   cd epayco-wallet-service
    ```
 
 2. **Install dependencies**
