@@ -7,7 +7,6 @@ import {
   QueryOptions,
 } from 'mongoose';
 
-// Fallback for FilterQuery since it is not exported in Mongoose 9+
 export type FilterQuery<T> = Record<string, any>;
 
 export interface PaginationOptions {
