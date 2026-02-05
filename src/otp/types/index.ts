@@ -1,0 +1,1 @@
+export type TypeOtp = 'verify-email' | 'verify-transaction';
