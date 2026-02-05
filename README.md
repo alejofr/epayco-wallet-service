@@ -1,46 +1,46 @@
 # Digital Wallet Service
 
-A NestJS-based digital wallet service.
+Un servicio de billetera digital basado en NestJS.
 
-## Prerequisites
+## Prerrequisitos
 
-- [Node.js](https://nodejs.org/) (latest LTS recommended)
+- [Node.js](https://nodejs.org/) (se recomienda la última versión LTS)
 - [pnpm](https://pnpm.io/)
-- [Docker](https://www.docker.com/) & Docker Compose
+- [Docker](https://www.docker.com/) y Docker Compose
 
-## Installation
+## Instalación
 
-1. **Clone the repository**
+1. **Clonar el repositorio**
 
    ```bash
    git clone <https://github.com/alejofr/epayco-wallet-service.git>
    cd epayco-wallet-service
    ```
 
-2. **Install dependencies**
+2. **Instalar dependencias**
 
    ```bash
    pnpm install
    ```
 
-## Configuration
+## Configuración
 
-1. **Environment Variables**
+1. **Variables de Entorno**
 
-   Create a `.env` file in the root directory by copying the example file:
+   Crea un archivo `.env` en el directorio raíz copiando el archivo de ejemplo:
 
    ```bash
    cp .env.example .env
    ```
 
-   Open `.env` and configure the variables.
+   Abre el archivo `.env` y configura las variables.
 
-   **Standard Configuration:**
+   **Configuración Estándar:**
    ```ini
    APP_ENV=local
    PORT_SERVER=3001
 
-   # Database Configuration (matches docker-compose)
+   # Configuración de Base de Datos (coincide con docker-compose)
    MONGO_DB_HOST=localhost
    MONGO_DB_PORT=27017
    MONGO_DB_DBNAME=epaycowallets
@@ -48,48 +48,60 @@ A NestJS-based digital wallet service.
    MONGO_DB_PASSWORD=
    ```
 
-2. **Generate Resend API Key**
+2. **Generar API Key de Resend (Obligatorio para el envío de correos)**
 
-   To send emails (OTP, etc.), you need a Resend API key.
+   Para que el servicio pueda enviar correos electrónicos (como códigos OTP, confirmaciones, etc.), es **obligatorio** configurar una API Key de Resend válida.
 
-   - Go to [Resend.com](https://resend.com/) and sign up or log in.
-   - Navigate to **API Keys** in the dashboard.
-   - Click **Create API Key**.
-   - Name your key (e.g., "Digital Wallet Dev") and select **Full Access** or restricted sending access.
-   - Copy the generated API Key.
-   - Paste it into your `.env` file:
+   - Ve a [Resend.com](https://resend.com/) y regístrate o inicia sesión.
+   - Navega a **API Keys** en el panel de control.
+   - Haz clic en **Create API Key**.
+   - Asigna un nombre a tu clave (ej: "Digital Wallet Dev") y selecciona **Full Access** o acceso restringido de envío.
+   - Copia la API Key generada.
+   - Pégala en tu archivo `.env`:
 
    ```ini
    API_KEY_RESEND=re_123456789...
    EMAIL_NOT_REPLY=onboarding@resend.dev
    ```
-   > Note: If you don't have a custom domain set up in Resend, use `onboarding@resend.dev` as the `EMAIL_NOT_REPLY` address to send to your verified email.
 
-## Database Setup
+   > [!WARNING]
+   > **Información Importante sobre el Plan Gratuito (Free Tier) de Resend:**
+   >
+   > Si estás utilizando una cuenta gratuita de Resend, **SOLO** puedes enviar correos electrónicos a la dirección de correo con la que te registraste en Resend.
+   >
+   > - **Restricción**: El envío a cualquier otro correo electrónico fallará y la API retornará un error de autorización (403 Forbidden o similar).
+   > - **Solución para Pruebas**: Asegúrate de usar tu propio correo (el registrado en Resend) como destinatario cuando pruebes el registro de usuarios o el envío de OTPs.
+   > - **Solución para Producción**: Para enviar correos a cualquier destinatario, debes verificar un dominio propio en Resend y actualizar la configuración DNS correspondiente.
+   >
+   > Si intentas enviar un correo a un usuario distinto con la API Key gratuita, **NO FUNCIONARÁ**.
 
-Start the MongoDB instance using Docker Compose:
+   > **Nota sobre el remitente**: Si no tienes un dominio personalizado configurado, debes usar `onboarding@resend.dev` como la dirección `EMAIL_NOT_REPLY`, de lo contrario, el envío también fallará.
+
+## Configuración de Base de Datos
+
+Inicia la instancia de MongoDB usando Docker Compose:
 
 ```bash
 docker-compose up -d
 ```
 
-This will start MongoDB on port `27017` as defined in `docker-compose.yml`.
+Esto iniciará MongoDB en el puerto `27017` como se define en `docker-compose.yml`.
 
-## Running the Application
+## Ejecutando la Aplicación
 
-1. **Development Mode**
+1. **Modo Desarrollo**
 
    ```bash
    pnpm run start:dev
    ```
 
-2. **Production Mode**
+2. **Modo Producción**
 
    ```bash
    pnpm run build
    pnpm run start:prod
    ```
 
-## Usage
+## Uso
 
-Once running, the service will be available at `http://localhost:3001/api`.
+Una vez en ejecución, el servicio estará disponible en `http://localhost:3001/api`.
