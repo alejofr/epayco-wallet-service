@@ -113,12 +113,17 @@ export class OtpService {
     }
 
     async validateOtpContext(sessionId: string, code: string) {
-        const otp = await this.otpRepository.findOne({ _id: sessionId, code, active: true });
+       try {
+            const otp = await this.otpRepository.findOne({ _id: sessionId, code, active: true });
 
-        if (otp && moment().valueOf() <= otp.expire) {
-            return otp;
-        }
-        return null;
+            if (otp && moment().valueOf() <= otp.expire) {
+                return otp;
+            }
+            
+            return null;
+       } catch (error) {
+            return null;
+       }
     }
 
     async invalidateOtp(sessionId: string, code: string) {
