@@ -1,0 +1,167 @@
+{
+    "info": {
+        "_postman_id": "8a3b5c7e-1234-5678-9abc-def123456789",
+        "name": "Digital Wallet Service",
+        "description": "Colección de endpoints para el servicio de Billetera Digital.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Usuarios",
+            "item": [
+                {
+                    "name": "Crear Usuario",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Juan\",\n    \"surname\": \"Perez\",\n    \"email\": \"juan.perez@example.com\",\n    \"identify\": \"123456789\",\n    \"numberPhone\": \"3001234567\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users"
+                            ]
+                        },
+                        "description": "Crea un nuevo usuario en el sistema.\n\n**Parámetros del Body (JSON):**\n- `name` (String): Nombre del usuario.\n- `surname` (String): Apellido del usuario.\n- `email` (String): Correo electrónico único.\n- `identify` (String): Documento de identidad único.\n- `numberPhone` (String): Número de teléfono único."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Billetera",
+            "item": [
+                {
+                    "name": "Consultar Saldo",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"identify\": \"123456789\",\n    \"numberPhone\": \"3001234567\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/wallets/balance",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "wallets",
+                                "balance"
+                            ]
+                        },
+                        "description": "Consulta el saldo actual de la billetera de un usuario.\n\n**Parámetros del Body (JSON):**\n- `identify` (String): Documento de identidad del usuario.\n- `numberPhone` (String): Número de teléfono del usuario."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Recargar Billetera",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"identify\": \"123456789\",\n    \"numberPhone\": \"3001234567\",\n    \"amount\": 50000\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/wallets/recharge",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "wallets",
+                                "recharge"
+                            ]
+                        },
+                        "description": "Recarga saldo a la billetera de un usuario.\n\n**Parámetros del Body (JSON):**\n- `identify` (String): Documento de identidad del usuario.\n- `numberPhone` (String): Número de teléfono del usuario.\n- `amount` (Number): Cantidad a recargar (debe ser un número positivo)."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Iniciar Compra/Pago (Generar OTP)",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"identify\": \"123456789\",\n    \"numberPhone\": \"3001234567\",\n    \"amount\": 15000\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/wallets/payment",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "wallets",
+                                "payment"
+                            ]
+                        },
+                        "description": "Inicia un proceso de pago o compra. Genera y envía un código OTP al correo del usuario para confirmar la transacción.\n\n**Parámetros del Body (JSON):**\n- `identify` (String): Documento de identidad del usuario.\n- `numberPhone` (String): Número de teléfono del usuario.\n- `amount` (Number): Monto de la compra (debe ser un número positivo)."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Confirmar Pago (OTP)",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"sessionId\": \"<SESSION_ID_RECIBIDO>\",\n    \"token\": \"123456\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/wallets/otp/confirm-payment",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "wallets",
+                                "otp",
+                                "confirm-payment"
+                            ]
+                        },
+                        "description": "Confirma una transacción de pago utilizando el código OTP y el ID de sesión recibidos.\n\n**Parámetros del Body (JSON):**\n- `sessionId` (String): ID de sesión único de la transacción (retornado en la respuesta de 'Iniciar Compra').\n- `token` (String): Código OTP de 6 dígitos enviado al correo."
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:3001/api",
+            "type": "string"
+        }
+    ]
+}

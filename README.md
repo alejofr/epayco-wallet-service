@@ -105,3 +105,10 @@ Esto iniciará MongoDB en el puerto `27017` como se define en `docker-compose.ym
 ## Uso
 
 Una vez en ejecución, el servicio estará disponible en `http://localhost:3001/api`.
+
+## Documentación de la API
+
+La documentación detallada de la API, incluyendo rutas, métodos, y ejemplos de parámetros, se encuentra disponible en una colección de Postman.
+
+- **Ubicación del archivo**: [`postman/digital-wallet-service.postman_collection.json`](postman/digital-wallet-service.postman_collection.json)
+- **Instrucciones**: Importa este archivo en Postman para explorar y probar la API.
