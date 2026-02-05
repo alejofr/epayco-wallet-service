@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { WalletsModule } from 'src/modules/wallets/wallets.module';
@@ -13,8 +13,8 @@ import { UsersController } from './users.controller';
   providers: [UserRepository, UsersService],
   imports: [
     MongooseModule.forFeature([{ name: UserEntity.name, schema: UserSchema }]),
-    WalletsModule
+    forwardRef(() => WalletsModule)
   ],
   exports: [UserRepository]
 })
-export class UsersModule {}
+export class UsersModule { }

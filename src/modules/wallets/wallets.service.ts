@@ -1,26 +1,51 @@
 import { Injectable } from '@nestjs/common';
-import { CreateWalletDto } from './dto/create-wallet.dto';
-import { UpdateWalletDto } from './dto/update-wallet.dto';
+import { TransactionsRepository } from 'src/modules/transactions/repository';
+import { UserRepository } from 'src/modules/users/repository';
+
+
+import { WalletsRepository } from './repository';
+import { InfoBaseWalletActionDto, RechargeWalletByUserInfoDto } from './dto/wallet-action.dto';
+
 
 @Injectable()
 export class WalletsService {
-  create(createWalletDto: CreateWalletDto) {
-    return 'This action adds a new wallet';
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly walletRepository: WalletsRepository,
+    private readonly transactionRepository: TransactionsRepository
+  ) { }
+
+  async getBalanceWallet({ identify }: InfoBaseWalletActionDto){
+    const user = await this.userRepository.findOne({ identify });
+
+    return await this.walletRepository.findOne({ userId: user._id.toString() });
   }
 
-  findAll() {
-    return `This action returns all wallets`;
+  async rechargeWallet({ identify, amount }: RechargeWalletByUserInfoDto) {
+    const user = await this.userRepository.findOne({ identify });
+    const wallet = await this.changeAmountWallet(user._id.toString(), amount, 'add');
+
+    await this.transactionRepository.create({
+      amount,
+      type: 'recharge',
+      walletId: wallet._id.toString()
+    })
+
+    return {
+      ok: true,
+      wallet
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} wallet`;
-  }
+  async changeAmountWallet(userId: string, amount: number, type: 'add' | 'sub') {
+    const wallet = await this.walletRepository.findOne({ userId });
 
-  update(id: number, updateWalletDto: UpdateWalletDto) {
-    return `This action updates a #${id} wallet`;
-  }
+    if (type === 'add') {
+      wallet.amount += amount;
+    } else if (type === 'sub') {
+      wallet.amount -= amount;
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} wallet`;
+    return this.walletRepository.updateByEntity(wallet);
   }
 }

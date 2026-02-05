@@ -1,5 +1,5 @@
 import { EntityMongoBase } from "src/common/base/entity-mongo.base";
-import type { Transaction, TypeTransaction } from "../types/transactions.type";
+import type { TypeTransaction } from "../types/transactions.type";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
 import { WalletEntity } from "src/modules/wallets/entities/wallet.entity";
@@ -8,7 +8,7 @@ import { TYPE_TRANSACTION_WALLET } from "src/common/consts";
 export type TransactionDocument = HydratedDocument<TransactionEntity>;
 
 @Schema({ collection: 'transactions' })
-export class TransactionEntity extends EntityMongoBase implements Transaction {
+export class TransactionEntity extends EntityMongoBase {
     @Prop({ required: true })
     amount: number;
 
