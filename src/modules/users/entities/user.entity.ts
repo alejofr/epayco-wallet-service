@@ -2,12 +2,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { EntityMongoBase } from 'src/common/base/entity-mongo.base';
 import { TYPE_OTP_USER } from 'src/common/consts';
-import type { OtpPreferenceUser, User } from '../types/user.type';
+import type { OtpPreferenceUser } from '../types/user.type';
 
 
 
 @Schema({ collection: 'users' })
-export class UserEntity extends EntityMongoBase implements User {
+export class UserEntity extends EntityMongoBase {
     @Prop({ required: true })
     name: string;
 
@@ -26,6 +26,7 @@ export class UserEntity extends EntityMongoBase implements User {
 
     @Prop({ default: 'email', enum: TYPE_OTP_USER, type: String })
     otpPreference: OtpPreferenceUser;
+
 }
 export const UserSchema = SchemaFactory.createForClass(UserEntity);
 export type UserDocument = UserEntity & Document;

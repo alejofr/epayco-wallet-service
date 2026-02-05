@@ -1,5 +1,4 @@
 import { EntityMongoBase } from "src/common/base/entity-mongo.base";
-import { Wallet } from "../types/wallet.type";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { UserEntity } from "src/modules/users/entities/user.entity";
 import mongoose, { HydratedDocument } from "mongoose";
@@ -7,7 +6,7 @@ import mongoose, { HydratedDocument } from "mongoose";
 export type WalletDocument = HydratedDocument<WalletEntity>;
 
 @Schema({ collection: 'wallets' })
-export class WalletEntity extends EntityMongoBase implements Wallet {
+export class WalletEntity extends EntityMongoBase {
     @Prop({ default: 0 })
     amount: number;
 
