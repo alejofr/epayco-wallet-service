@@ -19,6 +19,9 @@ export class OtpEntity extends EntityMongoBase {
 
     @Prop({ default: true })
     active: boolean;
+
+    @Prop({ type: Object })
+    metadata: Record<string, any>;
 }
 
 export const OtpSchema = SchemaFactory.createForClass(OtpEntity);

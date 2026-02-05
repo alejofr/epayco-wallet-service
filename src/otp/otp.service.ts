@@ -24,17 +24,13 @@ export class OtpService {
         this.fromEmail = this.config.getOrThrow('EMAIL_NOT_REPLY');
     }
 
-    async otpUser(value: string, options?: { type?: 'email' | 'sms', lang?: LangEmail, typeOtp?: TypeOtp }) {
+    async otpUser(value: string, options?: { type?: 'email' | 'sms', lang?: LangEmail, typeOtp?: TypeOtp, metadata?: any }) {
         const type = options?.type || 'email';
         const typeOtp = options?.typeOtp || 'verify-email';
         const lang = 'en';
-       
 
-        if (type === 'sms') {
 
-        }
-
-        const otp = await this.createOtp(value, { typeOtp });
+        const otp = await this.createOtp(value, { typeOtp, metadata: options?.metadata });
         const dataSend = await this.emailService.sendEmailByTemplateString({
             from: this.fromEmail,
             to: value,
@@ -56,15 +52,13 @@ export class OtpService {
         return {
             ok: true,
             message: formatEmailForDisplay(value),
+            sessionId: otp._id.toString(),
             dataSend: dataSend.data
         }
 
     }
 
     async checkOtp(code: string, type: 'email' | 'sms' = 'email') {
-        if (type === 'sms') {
-
-        }
 
         const otp = await this.attempt(code);
 
@@ -104,7 +98,7 @@ export class OtpService {
         return false;
     }
 
-    private async createOtp(email: string, options?: { expireSeconds?: number; typeOtp?: TypeOtp}) {
+    private async createOtp(email: string, options?: { expireSeconds?: number; typeOtp?: TypeOtp; metadata?: any }) {
         const expireSeconds = options?.expireSeconds || 300;
         const typeOtp = options?.typeOtp || 'verify-email';
         const expire = this.defaultExpire(expireSeconds);
@@ -114,7 +108,21 @@ export class OtpService {
             expire,
             typeOtp,
             code: this.generateOtp(),
+            metadata: options?.metadata
         });
+    }
+
+    async validateOtpContext(sessionId: string, code: string) {
+        const otp = await this.otpRepository.findOne({ _id: sessionId, code, active: true });
+
+        if (otp && moment().valueOf() <= otp.expire) {
+            return otp;
+        }
+        return null;
+    }
+
+    async invalidateOtp(sessionId: string, code: string) {
+        return await this.otpRepository.updateById({ _id: sessionId, code }, { active: false });
     }
 
     private defaultExpire(expireSeconds: number): number {
